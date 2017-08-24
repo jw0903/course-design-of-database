@@ -59,9 +59,6 @@
       <div class="form-group">
         <label for="zgys" class="col-md-4 control-label">主管医生</label>
         <div class="col-md-6">
-          <!-- <select class="form-control" id="zgys"  name="zgys" >
-            
-          </select> -->
           <input type="text" name="zgys" class="form-control" id="zgys" placeholder="主管医生" required="required" readonly="readonly" value="<%= br.zgys%>">
         </div>
       </div>
@@ -86,29 +83,8 @@
       </tbody>
     </table>
   </div>
-  <!-- <script type="text/template" id="tpl">
-    {{ each list as value index }}
-    <option>{{value.name}}</option>
-    {{/each}}
-  </script> -->
   <script src="node_modules/art-template/dist/template.js"></script>
   <script src="node_modules/jquery/dist/jquery.js"></script>
-  <!-- <script>
-    loadData()
-
-    function loadData() {
-      // 使用jquery的ajax
-      $.ajax({
-        url: '/ysList',
-        type: 'get',
-        dataType: 'json',
-        success: function(data) {
-          console.log(data)
-          $('#zgys').html(template('tpl', data))
-        }
-      })
-    }
-  </script> -->
 </body>
 
 </html>
