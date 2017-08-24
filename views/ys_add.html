@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+  <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
+</head>
+
+<body>
+  <div class="container">
+    <div class="page-header">
+      <h1><a href="/"  title="点击退出，重新登录">住院信息管理系统</a><small style="float:right">欢迎<strong><%= name%></strong>医生</small></h1>
+      <div class="row">
+        <div class="col-md-3 text-center"><a href="/ys_add">病人登记</a></div>
+        <div class="col-md-3 text-center"><a href="/ys_brMsg">病人信息</a></div>
+        <div class="col-md-3 text-center"><a href="/ys_cfmsg">病人处方</a></div>
+        <div class="col-md-3 text-center"><a href="/ys_del">出院手续</a></div>
+      </div>
+    </div>
+    <h2 class="text-center">住院登记</h2>
+    <form action="/ys_add" method="post" enctype="multipart/form-data" class="form-horizontal">
+      <div class="form-group">
+        <label for="br_no" class="col-md-4 control-label">病人ID</label>
+        <div class="col-md-6">
+          <input type="text" class="form-control" id="br_no" name="br_no" placeholder="输入病人ID(示例:'6XX')" required="required">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="br_name" class="col-md-4 control-label">姓名</label>
+        <div class="col-md-6">
+          <input type="text" class="form-control" id="br_name" name="br_name" placeholder="请输入姓名" required="required">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="gender" class="col-md-4 control-label">性别 </label>
+        <div class="col-md-6">
+          <select class="form-control"  name="gender">
+            <option>男</option>
+            <option>女</option>
+            <option>保密</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="age" class="col-md-4 control-label">年龄</label>
+        <div class="col-md-6">
+          <input type="text" name="age" class="form-control" id="age" placeholder="请输入年龄" onchange="if(!/(^0$)|(^100$)|(^\d{1,2}$)/.test(value)){value='';alert('输入格式不正确!');}" required="required">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="address" class="col-md-4 control-label">地址</label>
+        <div class="col-md-6">
+          <input type="text" name="address" class="form-control" id="adress" placeholder="请输入地址" required="required">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="phone" class="col-md-4 control-label">电话</label>
+        <div class="col-md-6">
+          <input name="phone" type="text" class="form-control" id="phone" placeholder="请输入电话" required="required">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="zgys" class="col-md-4 control-label">主管医生</label>
+        <div class="col-md-6">
+          <select class="form-control" id="zgys"  name="zgys">
+            
+          </select>
+          <!-- <input type="text" name="zgys" class="form-control" id="zgys" placeholder="主管医生" required="required"> -->
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="bf_no" class="col-md-4 control-label">病房号</label>
+        <div class="col-md-6">
+          <input type="text" name="bf_no" class="form-control" id="bf_no" placeholder="请输入病房号(示例:'7XX')" required="required">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="zd" class="col-md-4 control-label">诊断</label>
+        <div class="col-md-6">
+          <textarea id="zd" name="zd" class="form-control" cols="30" rows="10" placeholder="请输入医生诊断" required="required"></textarea>
+        </div>
+      </div>
+      <div class="text-center">
+        <button type="submit" class="btn btn-success">登记</button>
+      </div>
+    </form>
+  </div>
+  <script type="text/template" id="tpl">
+    {{ each list as value index }}
+    <option>{{value.name}}</option>
+    {{/each}}
+  </script>
+  <script src="node_modules/art-template/dist/template.js"></script>
+  <script src="node_modules/jquery/dist/jquery.js"></script>
+  <script>
+    loadData()
+
+    function loadData() {
+      // 使用jquery的ajax
+      $.ajax({
+        url: '/ysList',
+        type: 'get',
+        dataType: 'json',
+        success: function(data) {
+          console.log(data)
+          $('#zgys').html(template('tpl', data))
+        }
+      })
+    }
+  </script>
+
+
+</body>
+
+</html>

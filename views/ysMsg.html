@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+  <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
+</head>
+
+<body>
+  <div class="container">
+    <div class="page-header">
+      <h1><a href="/"  title="点击退出，重新登录">住院信息管理系统</a></h1>
+      <div class="row">
+        <div class="col-md-3 text-center"><a href="/add">住院登记</a></div>
+        <div class="col-md-3 text-center"><a href="/ysMsg">医生信息</a></div>
+        <div class="col-md-3 text-center"><a href="/showCfmsg">处方信息</a></div>
+        <div class="col-md-3 text-center"><a href="/del">出院手续</a></div>
+      </div>
+      <article id="content2">
+        <div style="margin-bottom:10px">
+            <input type="text" id="search_msg" name="search_msg" placeholder="输入医生姓名进行搜索"  />  
+            <button onclick="loadData1()" style="float:right">显示所有</button>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>编号</th>
+                    <th>医生ID</th>
+                    <th>姓名</th>
+                    <th>性别</th>
+                    <th>年龄</th>
+                    <th>职称</th>
+                    <th>联系方式</th>
+                    <th>科室</th>
+                    <th>科室地址</th>
+                    <th>目前病人</th>
+                </tr>
+            </thead>
+            <tbody id="tbody">
+                
+            </tbody>
+        </table>
+      </article>
+      </div>
+    </div>
+  </div>
+      <script type="text/template" id="tpl1">
+        {{ each list as value index }}
+        <tr>
+          <td>{{index+1}}</td>
+          <td>{{value.ys_no}}</td>
+          <td>{{value.ys_name}}</td>
+          <td>{{value.ys_gender}}</td>
+          <td>{{value.age}}</td>
+          <td>{{value.zc}}</td>
+          <td>{{value.phone}}</td>
+          <td>{{value.ks_name}}</td>
+          <td>{{value.ks_address}}</td>
+          <td>{{value.br_name}}</td>
+        </tr>
+        {{/each}}
+      </script>
+      <script src="node_modules/art-template/dist/template.js"></script>
+      <script src="node_modules/jquery/dist/jquery.js"></script>
+      <script>
+        loadData1();
+        function loadData1() {
+          // 使用jquery的ajax
+          $.ajax({
+            url: '/showYsMsg',
+            type: 'get',
+            dataType: 'json',
+            success: function(data) {
+              // {list: Array[{},{}]}
+              // console.log(data)
+              // template(id, data)
+              // 根据 id 渲染模板。内部会根据document.getElementById(id)查找模板。
+              console.log(data)
+              $('#tbody').html(template('tpl1', data))
+            }
+          })
+        }
+        $('#search_msg').bind('input propertychange', function() {
+              var msg = document.getElementById('search_msg').value;
+              if(msg=="") {
+                return loadData1();
+              } else {  
+                $.ajax({
+                    url: '/searchYsMsg?name='+msg,
+                    type: 'get',
+                    dataType: 'json',
+                    success: function(data) {
+                      // {list: Array[{},{}]}
+                      // console.log(data)
+                      // template(id, data)
+                      // 根据 id 渲染模板。内部会根据document.getElementById(id)查找模板。
+                      console.log(data)
+                      $('#tbody').html(template('tpl1', data))
+                    }
+                })
+              }
+        });
+      </script>
+</body>
+
+</html>

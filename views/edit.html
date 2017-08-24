@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+  <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
+</head>
+
+<body>
+  <div class="container">
+    <div class="page-header">
+      <h1><a href="/"  title="点击退出，重新登录">住院信息管理系统</a><small style="float:right">欢迎<strong><%= name%></strong>医生</small></h1>
+      <div class="row">
+        <div class="col-md-3 text-center"><a href="/ys_add">病人登记</a></div>
+        <div class="col-md-3 text-center"><a href="/ys_brMsg">病人信息</a></div>
+        <div class="col-md-3 text-center"><a href="/ys_cfmsg">病人处方</a></div>
+        <div class="col-md-3 text-center"><a href="/ys_del">出院手续</a></div>
+      </div>
+    </div>
+    <h2 class="text-center">病人信息</h2>
+    <form id="form" action="/edit?br_no=<%= br.br_no %>" method="post" enctype="multipart/form-data" class="form-horizontal">
+      <div class="form-group">
+        <label for="br_no" class="col-md-4 control-label">病人ID</label>
+        <div class="col-md-6">
+          <input type="text" class="form-control" id="br_no" name="br_no" placeholder="输入病人ID(示例:'6XX')" value="<%= br.br_no %>" readonly="readonly">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="br_name" class="col-md-4 control-label">姓名</label>
+        <div class="col-md-6">
+          <input type="text" class="form-control" id="br_name" name="br_name" placeholder="请输入姓名" required="required" value="<%= br.br_name %>">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="gender" class="col-md-4 control-label">性别 </label>
+        <div class="col-md-6">
+          <input class="form-control"  name="gender" value="<%= br.gender %>">
+          </input>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="age" class="col-md-4 control-label">年龄</label>
+        <div class="col-md-6">
+          <input type="text" name="age" class="form-control" id="age" placeholder="请输入年龄" onchange="if(!/(^0$)|(^100$)|(^\d{1,2}$)/.test(value)){value='';alert('输入格式不正确!');}" required="required" value="<%= br.age %>">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="address" class="col-md-4 control-label">地址</label>
+        <div class="col-md-6">
+          <input type="text" name="address" class="form-control" id="adress" placeholder="请输入地址" required="required" value="<%= br.address %>">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="phone" class="col-md-4 control-label">电话</label>
+        <div class="col-md-6">
+          <input name="phone" type="text" class="form-control" id="phone" placeholder="请输入电话" required="required" value="<%= br.phone %>">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="zgys" class="col-md-4 control-label">主管医生</label>
+        <div class="col-md-6">
+          <input class="form-control" id="zgys"  name="zgys" value="<%= br.zgys %>">
+          </input>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="bf_no" class="col-md-4 control-label">病房号</label>
+        <div class="col-md-6">
+          <input type="text" name="bf_no" class="form-control" id="bf_no" placeholder="请输入病房号(示例:'7XX')" value="<%= br.bf_no %>" required="required">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="zd" class="col-md-4 control-label">诊断</label>
+        <div class="col-md-6">
+          <textarea id="zd" name="zd" class="form-control" cols="30" rows="10" placeholder="请输入医生诊断" required="required" value="什么东西"><%= br.zd %></textarea>
+        </div>
+      </div>
+      <div class="text-center">
+        <button type="submit" class="btn btn-success">确认修改</button>
+      </div>
+    </form>
+  </div>
+  <script src="node_modules/art-template/dist/template.js"></script>
+  <script src="node_modules/jquery/dist/jquery.js"></script>
+  <script>
+    $('#form').on('submit', function(e) {
+      e.preventDefault();
+      var url = $(this).attr('action');
+      var type = $(this).attr('method');
+      $.ajax({
+        url: url,
+        type: type,
+        data: $(this).serialize(),
+        dataType: 'json',
+        success: function(data) {
+          var code = data.code
+          if (code === 2000) {
+            alert('修改成功');
+            window.location.href = '/ys_brMsg'
+          } else if (code === 2001) {
+            alert('修改失败,请重试');
+          }
+        }
+      })
+    })
+  </script>
+
+</body>
+
+</html>

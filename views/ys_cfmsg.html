@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+  <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
+</head>
+
+<body>
+  <div class="container">
+    <div class="page-header">
+      <h1><a href="/"  title="点击退出，重新登录">住院信息管理系统</a><small style="float:right">欢迎<strong><%= name%></strong>医生</small></h1>
+      <div class="row">
+        <div class="col-md-3 text-center"><a href="/ys_add">病人登记</a></div>
+        <div class="col-md-3 text-center"><a href="/ys_brMsg">病人信息</a></div>
+        <div class="col-md-3 text-center"><a href="/ys_cfmsg">病人处方</a></div>
+        <div class="col-md-3 text-center"><a href="/ys_del">出院手续</a></div>
+      </div>
+    </div>
+    <h4 class="text-center">请选择您的病人</h4>
+    <div style="margin-bottom:10px" class="text-center">
+        <form action="" method="" name="form1" id="form1">
+          <select name="getbr_name" id="getbr_name" style="height:25px"></select>
+          <input type="button" value="确认" name="ys_cfmsg" onclick="form1.action='/ys_cfmsg';form1.method='post';form1.submit();" />
+        </form>
+    </div>
+    <div id="theform"></div>
+  </div>
+  <script type="text/template" id="tpl">
+    {{ each list as value }}
+    <option>{{value.br_name}}</option>
+    {{/each}}
+  </script>
+  <script src="node_modules/art-template/dist/template.js"></script>
+  <script src="node_modules/jquery/dist/jquery.js"></script>
+  <script>
+    loadData()
+    function loadData() {
+      // 使用jquery的ajax
+      $.ajax({
+        url: '/getbr_name',
+        type: 'get',
+        dataType: 'json',
+        success: function(data) {
+          // console.log(data)
+          $('#getbr_name').html(template('tpl', data))
+        }
+      })
+    }
+    function loadData1() {
+      var thename = $('#getbr_name').find("option:selected").text();
+      $.ajax({
+        url: '/getbr_msg?name='+ thename,
+        type: 'get',
+        dataType: 'json',
+        success: function(data) {
+          // console.log(data)
+          // $('#theform').html(template('tp2', data));
+        }
+      })
+    }
+      // $('#form').on('submit', function(e) {
+      //   var url = $(this).attr('action');
+      //   var type = $(this).attr('method');
+      //   var brno = $('#br_no').value;
+      //     $.ajax({
+      //     url: "ys_cfmsg?br_no=" + brno ,
+      //     type: 'post',
+      //     data: $(this).serialize(),
+      //     dataType: 'json',
+      //     success: function(data) {
+      //       var code = data.code
+      //       if (code === 2000) {
+      //         alert('修改成功');
+      //       } else if (code === 2001) {
+      //         alert('修改失败,请重试');
+      //       }
+      //     }
+      //   })
+      // })
+  </script>
+</body>
+</html>

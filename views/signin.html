@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+  <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
+  <style scoped>
+  .content{
+    position: relative;
+    background:#3377aa;
+    border-radius: 4px;
+    width:400px;
+    height: 250px;
+    margin:0 auto;
+    padding:50px 50px;
+    transform:translateY(-600px);
+    transition:all .5s;
+    display: flex;
+    justify-content:center;
+  }
+  .content span{
+    position: absolute;
+    right: 1px;
+    top:1px;
+    border-radius: 2px;
+    padding:2px 6px;
+    font-size: 20px;
+    font-weight: bold;
+    cursor:pointer;
+  }
+  .content span:hover{
+    background-color: #fff;
+    color:#3377aa;
+  }
+  .content form{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items:center;
+  }
+  .content form input[type='text'],.content form input[type='password']{
+    padding-left: 10px;
+    height: 34px;
+    font-size: 14px;
+    border-radius: 3px;
+    border:none;
+  }
+  .active{
+    transform:translateY(-196px);
+  }
+  #addbr{
+    width:80px;
+    height: 30px;
+    font-size: 18px;
+    border:none;
+    border-radius: 3px;
+  }
+  #addbr:hover{
+    background:#999;
+  }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="page-header">
+      <h1><a href="/"  title="点击刷新">住院信息管理系统</a> <small>首页</small></h1>
+    </div>
+    <h3 class="text-center">XX医院住院部</h3>
+    <form method="" action="" id="form1" name="form1" class="form-horizontal">
+      <div class="form-group">
+        <label for="id_input" class="col-sm-4 control-label">帐号</label>
+        <div class="col-sm-4">
+          <input type="text" class="form-control" name="id_input" placeholder="请输入帐号" required="required">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="pwd_input" class="col-sm-4 control-label">密码</label>
+        <div class="col-sm-4">
+          <input type="password" class="form-control" id="login_pwd" name="pwd_input" placeholder="请输入密码" required="required">
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row text-center">
+            <input type="button" value="病人" title="病人登录" name="br_login" id="br_login"  />
+            <input type="button" value="医生" title="伟大的医生专用登录" name="ys_login" id="ys_login" />
+            <input type="button" value="注册" title="没有账号点我注册呀" id="signUp" name="signUp" />
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="content" id="content">
+    <span>X</span>
+    <form id="brMsg">
+      <label for="yh">账号：<input id="yh" name="yh" type="text" placeholder="请输入用户名" /></label>
+      <label for="ps">密码：<input id="ps" name="ps" type="password" placeholder="请输入密码"/></label>
+      <label for="ps1">密码：<input id="ps1" type="password" placeholder="请输入密码"/></label>
+      <input type="button" value="确定" id="addbr" />
+    </form>
+  </div>
+  <script src="node_modules/art-template/dist/template.js"></script>
+  <script src="node_modules/jquery/dist/jquery.js"></script>
+  <script src="node_modules/md5.js"></script>
+  <script>
+    window.onload = function () {
+      //病人登录
+      $('#br_login').click(function(){
+          $("#form1").attr("method","post");
+          $("#form1").attr("action","/br_signin");
+          let pwd = $("#login_pwd").val();
+          if(pwd != ''){
+            $("#login_pwd").val(md5(pwd));
+          }
+          $("#form1").submit();
+      })
+
+      //医生登录
+      $("#ys_login").click(function(){
+          var form1 = $("#form1");
+          form1.attr("method","post");
+          form1.attr("action","/ys_signin");
+          let pwd = $("#login_pwd").val();
+          if(pwd != ''){
+            $("#login_pwd").val(md5(pwd));
+          }
+          form1.submit();
+      })
+
+      //点击注册弹出框
+      var up = document.getElementById('signUp');
+      up.addEventListener('click',signup,false);
+      var con = document.getElementById('content');
+      function signup(){
+        con.classList.add('active');
+      }
+      var sp = con.getElementsByTagName('span')[0];
+      sp.addEventListener('click',function(){
+        con.classList.remove('active');
+      },false);
+
+      //点击注册按钮
+      var addbtn = document.getElementById('addbr');
+      addbtn.addEventListener('click',function() {
+          var name = $('#yh').val();
+          var pwd = $('#ps').val();
+          var pwd1 = $('#ps1').val();
+          var flag = 0;
+          if(name == ''){
+            alert('请输入账号');
+          } else {
+            flag ++;
+          }
+          if(pwd == ''){
+            alert('请输入密码')
+          } else {
+            flag ++;
+          }
+          if(pwd == pwd1){
+            flag ++;
+          } else {
+            alert('两次密码输入不一致，请重新输入');
+          }
+          if(flag == 3){
+            $('#ps').val(md5(pwd));
+            var form = $("#brMsg");
+            console.log(name, pwd);
+            $.ajax({
+              type: "POST",
+              url:"/addBr",
+              dataType: 'json',
+              data:form.serialize(),
+              success:function(data){
+                var code = data.code;
+                if(code === 2000){
+                  alert(data.msg);
+                  window.location.href = '/';
+                } else {
+                  alert(data.msg);
+                }
+              }
+            })
+          }
+      },false)
+    }
+  </script>
+</body>
+
+</html>
