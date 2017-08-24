@@ -22,33 +22,35 @@ exports.showIndex = (req, res) => {
 exports.addBr = (req, res) => {
   var brPwd = req.body.ps;
   var brNo = req.body.yh;
+  let flag = 0;
   console.log(brPwd);
   var sql= 'INSERT INTO br(br_no, br_pwd) VALUES(?, ?)';
-    db.query(sql, [
-      brNo,brPwd
-    ], (err, rows) => {
-      if (err) {
+  db.query(sql, [
+    brNo,brPwd
+  ], (err, rows) => {
+    if (err) {
+      return res.json({
+        code:2001,
+        msg:'注册失败，请重试'
+      })
+    } else {
+      flag = 1;
+    }
+  })
+  var sql1 = 'INSERT INTO cf(br_id) VALUES (?)';
+  db.query(sql1,[brNo],
+    (err,rows) => {
+      if(err) {
         return res.json({
           code:2001,
           msg:'注册失败，请重试'
         })
-      } else {
+      } else if(flag == 1){
         return res.json({
           code:2000,
           msg:'注册成功'
         })
-        // db.query('INSERT INTO cf(br_id) VALUE(?)',[br_no],
-        //   (err, rows) => {
-        //     if(err) {
-        //       console.log("插入出现错误");
-        //       return res.send("<script>alert(':( 登记失败！请核实后再登录。');location.href='ys_add'</script>")
-        //     } else {
-        //       res.send("<script>alert(':) 登记成功');location.href='ys_add'</script>");
-        //     }
-        //   })
       }
-      // res.redirect('back');
-      //添加数据之后返回原来界面
     })
 }
 
@@ -131,21 +133,33 @@ exports.doAdd = (req, res) => {
     const zgys = fields.zgys;
     const bf_no = fields.bf_no;
     const zd = fields.zd;
-    'UPDATE br SET br_name=?, gender=?, age=?, address=?, phone=?, zgys=?, bf_no=?, zd=? WHERE br_no=?', [
-    br_name, gender, age, address, phone, zgys, bf_no, zd, id
-  ]
-
-    db.query('UPDATE br SET br_no=?, br_name=?, gender=?, age=?, address=?, phone=?, zgys=?, bf_no=?, zd=? WHERE br_no=?', 
-      [id, br_name, gender, age, address, phone, zgys, bf_no, zd, id], 
-      (err, rows) => {
-      if (err) {
-        console.log('保存出现错误')
-        return res.send("<script>alert(':( 保存失败');location.href='add'</script>")
-      }
-      res.send("<script>alert(':) 登记成功');location.href='/index'</script>");
-      // res.redirect('back');
-      //添加数据之后返回原来界面
-    })
+    if(zgys==''){
+      db.query('UPDATE br SET br_no=?, br_name=?, gender=?, age=?, address=?, phone=? WHERE br_no=?', 
+        [id, br_name, gender, age, address, phone, id], 
+        (err, rows) => {
+        if (err) {
+          console.log('保存出现错误')
+          console.log(id, br_name, gender, age, address, phone, zgys, bf_no, zd, id);
+          return res.send("<script>alert(':( 保存失败');location.href='add'</script>")
+        }
+        res.send("<script>alert(':) 登记成功');location.href='/index'</script>");
+        // res.redirect('back');
+        //添加数据之后返回原来界面
+      })
+    } else {
+      db.query('UPDATE br SET br_no=?, br_name=?, gender=?, age=?, address=?, phone=?, zgys=?, bf_no=?, zd=? WHERE br_no=?', 
+        [id, br_name, gender, age, address, phone, zgys, bf_no, zd, id], 
+        (err, rows) => {
+        if (err) {
+          console.log('保存出现错误')
+          console.log(id, br_name, gender, age, address, phone, zgys, bf_no, zd, id);
+          return res.send("<script>alert(':( 保存失败');location.href='add'</script>")
+        }
+        res.send("<script>alert(':) 登记成功');location.href='/index'</script>");
+        // res.redirect('back');
+        //添加数据之后返回原来界面
+      })
+    }
  })
 }
 
@@ -568,7 +582,7 @@ exports.ys_dodel = (req, res) => {
         db.query("DELETE FROM cf WHERE br_id=?",[id],
           (err, rows1) => {
             if(rows1.affectedRows === 1){
-              return res.send("<script>alert('删除成功!');location.href='/ys_del';</script>")
+              return res.send("<script>alert('病人出院成功!');location.href='/ys_del';</script>")
             } else {
               res.send("<script>alert('删除出现错误!');location.href='/';</script>")
             }
