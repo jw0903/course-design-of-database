@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <title></title>
   <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
+  <link rel="stylesheet" href="slide.css" />
 </head>
 
 <body>
@@ -18,9 +19,28 @@
         <div class="col-md-3 text-center"><a href="/ys_del">出院手续</a></div>
       </div>
     </div>
+    <div id="con">
+        <div id="list" style="left:0px;">
+            <img src="1.jpg" alt="tuu">
+            <img src="2.jpg" alt="tutu">
+            <img src="3.jpg" alt="tutu">
+            <img src="4.jpg" alt="tutu">
+            <img src="5.jpg" alt="tutu">
+        </div>
+        <div id="buttons">
+            <span index="1" class="on"></span>
+            <span index="2"></span>
+            <span index="3"></span>
+            <span index="4"></span>
+            <span index="5"></span>
+        </div>
+        <a href="javascript:;" id="prev" class="arrow">&lt;</a>
+        <a href="javascript:;" id="next" class="arrow">&gt;</a>
+    </div>
   </div>
-      <script src="node_modules/art-template/dist/template.js"></script>
-      <script src="node_modules/jquery/dist/jquery.js"></script>
+  <script src="node_modules/art-template/dist/template.js"></script>
+  <script src="node_modules/jquery/dist/jquery.js"></script>
+  <script src="slide.js"></script>
 </body>
 
 </html>
