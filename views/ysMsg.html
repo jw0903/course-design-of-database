@@ -81,7 +81,7 @@
             }
           })
         }
-        $('#search_msg').bind('input propertychange', function() {
+        $('#search_msg').bind('input propertychange', throttle(function() {
               var msg = document.getElementById('search_msg').value;
               if(msg=="") {
                 return loadData1();
@@ -100,7 +100,27 @@
                     }
                 })
               }
-        });
+        },1000));
+        function throttle(fn, threshhold){
+          var last;
+          var timer;
+          threshhold || (threshhold = 250);
+          return function(){
+            var context = this;
+            var args = arguments;
+            var now = +new Date();
+            if(last && now < last + threshhold){
+              clearTimeout(timer);
+              timer = setTimeout(function(){
+                last = now;
+                fn.apply(context, args)
+              }, threshhold)
+            } else {
+              last = now;
+              fn.apply(context,args);
+            }
+          }
+        }
       </script>
 </body>
 
