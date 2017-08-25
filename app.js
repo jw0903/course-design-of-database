@@ -8,7 +8,7 @@ var session = require('express-session');
 const app = express()
 
 // 静态资源服务
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
+app.use(express.static(path.join(__dirname, 'upload')))
 app.use('/node_modules', express.static(path.join(__dirname, 'node_modules')))
 
 // 配置模板引擎
